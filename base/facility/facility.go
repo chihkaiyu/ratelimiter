@@ -12,7 +12,7 @@ import (
 
 	"github.com/braintree/manners"
 	"github.com/gin-gonic/gin"
-	"github.com/siruspen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 const (

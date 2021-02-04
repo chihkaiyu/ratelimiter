@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/siruspen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/chihkaiyu/dcard-homework/base/ctx"
 	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy"
@@ -40,7 +40,7 @@ func NewFixedWindow(
 func (im *impl) Acquire(context ctx.CTX, key string) (bool, int, error) {
 	now := timeNow()
 	window := now.Unix() / int64(im.size)
-	redisKey := fmt.Sprintf("%s:%d", key, window)
+	redisKey := fmt.Sprintf("fixed_window:%s:%d", key, window)
 	value, err := im.redis.Incr(context, redisKey)
 	if err != nil && err != redis.Nil {
 		context.WithFields(logrus.Fields{

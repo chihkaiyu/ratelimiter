@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"strconv"
 	"testing"
 	"time"
 
@@ -132,4 +133,96 @@ func (s *redisSuite) TestIncr() {
 func (s *redisSuite) TestExpire() {
 	err := s.redis.Expire(mockCTX, "tmp", 1*time.Second)
 	s.NoError(err)
+}
+
+func (s *redisSuite) TestZAdd() {
+	key := "tmp"
+	err := s.redis.ZAdd(mockCTX, key, 5, "4")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 1, "2")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 3, "3")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 10, "5")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, -1, "1")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 999, "6")
+	s.NoError(err)
+
+	members, err := s.redis.ZRange(mockCTX, key, 0, 2)
+	s.NoError(err)
+	s.Len(members, 3)
+	for i := 0; i < len(members); i++ {
+		s.Equal(strconv.FormatInt(int64(i+1), 10), members[i])
+	}
+
+	members, err = s.redis.ZRange(mockCTX, key, 0, 10)
+	s.NoError(err)
+	s.Len(members, 6)
+	for i := 0; i < len(members); i++ {
+		s.Equal(strconv.FormatInt(int64(i+1), 10), members[i])
+	}
+}
+
+func (s *redisSuite) TestZCount() {
+	key := "tmp"
+	err := s.redis.ZAdd(mockCTX, key, 5, "4")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 1, "2")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 3, "3")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 10, "5")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, -1, "1")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 999, "6")
+	s.NoError(err)
+
+	count, err := s.redis.ZCount(mockCTX, key, "1", "10")
+	s.NoError(err)
+	s.Equal(4, count)
+
+	count, err = s.redis.ZCount(mockCTX, key, "-10", "5")
+	s.NoError(err)
+	s.Equal(4, count)
+
+	count, err = s.redis.ZCount(mockCTX, key, "-inf", "inf")
+	s.NoError(err)
+	s.Equal(6, count)
+}
+
+func (s *redisSuite) TestZRemRangeByScore() {
+	key := "tmp"
+	err := s.redis.ZAdd(mockCTX, key, 5, "4")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 1, "2")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 3, "3")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 10, "5")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, -1, "1")
+	s.NoError(err)
+	err = s.redis.ZAdd(mockCTX, key, 999, "6")
+	s.NoError(err)
+
+	err = s.redis.ZRemRangeByScore(mockCTX, key, "1", "5")
+	s.NoError(err)
+	count, err := s.redis.ZCount(mockCTX, key, "-inf", "inf")
+	s.NoError(err)
+	s.Equal(3, count)
+
+	err = s.redis.ZRemRangeByScore(mockCTX, key, "-10", "0")
+	s.NoError(err)
+	count, err = s.redis.ZCount(mockCTX, key, "-inf", "inf")
+	s.NoError(err)
+	s.Equal(2, count)
+
+	err = s.redis.ZRemRangeByScore(mockCTX, key, "-inf", "inf")
+	s.NoError(err)
+	count, err = s.redis.ZCount(mockCTX, key, "-inf", "inf")
+	s.NoError(err)
+	s.Equal(0, count)
 }

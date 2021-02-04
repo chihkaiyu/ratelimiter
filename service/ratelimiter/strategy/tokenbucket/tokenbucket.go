@@ -11,8 +11,12 @@ import (
 
 const (
 	script = `
-redis.call('HSET', KEYS[1], 'timestamp', ARGV[1])
-local curVal = redis.call('HINCRBY', KEYS[1], 'timestamp', ARGV[2])
+local newSize = 0
+local oldData = redis.call('HGET', KEYS[1], 'timestamp', 'token')
+if oldData[1] then
+	newSize = 
+
+newSize = math.max(tonumber(oldData[3]) - tonumber(ARGV[3]) * (secDiff + nanosecDiff / 1000000000), 0)
 
 return curVal
 `

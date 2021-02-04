@@ -30,4 +30,15 @@ type Service interface {
 
 	// Expire sets the TTL of given key
 	Expire(context ctx.CTX, key string, ttl time.Duration) error
+
+	// ZAdd adds member score to sorted set of given key
+	ZAdd(context ctx.CTX, key string, score int, member string) error
+
+	// ZCount counts the member whose score are between given min and max score
+	ZCount(context ctx.CTX, key string, min, max string) (int, error)
+
+	ZRange(context ctx.CTX, key string, start, end int) ([]string, error)
+
+	// ZRemRangeByScore removes the member whose scores are between given min and max
+	ZRemRangeByScore(context ctx.CTX, key string, min, max string) error
 }

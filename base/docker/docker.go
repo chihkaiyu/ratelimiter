@@ -6,7 +6,7 @@ import (
 
 	"github.com/go-redis/redis/v8"
 	"github.com/ory/dockertest/v3"
-	"github.com/siruspen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/chihkaiyu/dcard-homework/base/ctx"
 )

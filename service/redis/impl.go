@@ -84,3 +84,45 @@ func (im *impl) Expire(context ctx.CTX, key string, ttl time.Duration) error {
 
 	return nil
 }
+
+func (im *impl) ZAdd(context ctx.CTX, key string, score int, member string) error {
+	_, err := im.client.ZAdd(context, key, &redis.Z{
+		Score:  float64(score),
+		Member: member,
+	}).Result()
+	if err != nil {
+		context.WithField("err", err).Error("client.ZAdd failed")
+		return err
+	}
+
+	return nil
+}
+
+func (im *impl) ZRange(context ctx.CTX, key string, start, end int) ([]string, error) {
+	members, err := im.client.ZRange(context, key, int64(start), int64(end)).Result()
+	if err != nil {
+		context.WithField("err", err).Error("client.ZRange failed")
+		return []string{}, err
+	}
+
+	return members, nil
+}
+
+func (im *impl) ZCount(context ctx.CTX, key string, min, max string) (int, error) {
+	count, err := im.client.ZCount(context, key, min, max).Result()
+	if err != nil {
+		context.WithField("err", err).Error("client.ZCount failed")
+		return 0, err
+	}
+
+	return int(count), nil
+}
+
+func (im *impl) ZRemRangeByScore(context ctx.CTX, key string, min, max string) error {
+	_, err := im.client.ZRemRangeByScore(context, key, min, max).Result()
+	if err != nil {
+		context.WithField("err", err).Error("client.ZRemRangeByScore failed")
+		return err
+	}
+	return nil
+}

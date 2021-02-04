@@ -2,7 +2,7 @@ package api
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/siruspen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/chihkaiyu/dcard-homework/base/ctx"
 	"github.com/chihkaiyu/dcard-homework/service/ratelimiter"

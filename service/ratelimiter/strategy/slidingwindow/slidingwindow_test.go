@@ -1,4 +1,4 @@
-package fixedwindow
+package slidingwindow
 
 import (
 	"testing"
@@ -26,46 +26,46 @@ func (m *mockFuncs) timeNow() time.Time {
 	return args.Get(0).(time.Time)
 }
 
-type fixedWindowSuite struct {
+type slidingWindowSuite struct {
 	suite.Suite
-	redisPort   string
-	fixedWindow *impl
-	mockFuncs   *mockFuncs
+	redisPort     string
+	slidingWindow *impl
+	mockFuncs     *mockFuncs
 }
 
-func TestFixedWindowSuite(t *testing.T) {
-	suite.Run(t, new(fixedWindowSuite))
+func TestSlidingWindowSuite(t *testing.T) {
+	suite.Run(t, new(slidingWindowSuite))
 }
 
-func (s *fixedWindowSuite) SetupSuite() {
+func (s *slidingWindowSuite) SetupSuite() {
 	ports, err := docker.RunExternal([]string{"redis"})
 	s.NoError(err)
 
 	s.redisPort = ports[0]
 }
 
-func (s *fixedWindowSuite) TearDownSuite() {
+func (s *slidingWindowSuite) TearDownSuite() {
 	s.NoError(docker.RemoveExternal())
 }
 
-func (s *fixedWindowSuite) SetupTest() {
+func (s *slidingWindowSuite) SetupTest() {
 	redis := redis.NewRedis("localhost:"+s.redisPort, "")
-	s.fixedWindow = NewFixedWindow(redis).(*impl)
-	*fixedWindowSize = 10
-	*fixedWindowLimit = 5
+	s.slidingWindow = NewSlidingWindow(redis).(*impl)
+	*slidingWindowSize = 10
+	*slidingWindowLimit = 5
 
 	// mock functions
 	s.mockFuncs = new(mockFuncs)
 	timeNow = s.mockFuncs.timeNow
 }
 
-func (s *fixedWindowSuite) TearDownTest() {
+func (s *slidingWindowSuite) TearDownTest() {
 	s.mockFuncs.AssertExpectations(s.T())
 
 	s.NoError(docker.ClearRedis(s.redisPort))
 }
 
-func (s *fixedWindowSuite) TestAccquire() {
+func (s *slidingWindowSuite) TestAccquire() {
 	tests := []struct {
 		Desc         string
 		AccquireTime []time.Time
@@ -90,7 +90,7 @@ func (s *fixedWindowSuite) TestAccquire() {
 				mockNow.Add(11 * time.Second),
 			},
 			Exp:      []bool{true, true, true},
-			ExpCount: []int{1, 2, 1},
+			ExpCount: []int{1, 2, 2},
 		},
 		{
 			Desc: "acquire failed",
@@ -103,7 +103,7 @@ func (s *fixedWindowSuite) TestAccquire() {
 				mockNow.Add(5 * time.Second),
 			},
 			Exp:      []bool{true, true, true, true, true, false},
-			ExpCount: []int{1, 2, 3, 4, 5, 6},
+			ExpCount: []int{1, 2, 3, 4, 5, 5},
 		},
 		{
 			Desc: "acquire failed but success at different window",
@@ -114,11 +114,11 @@ func (s *fixedWindowSuite) TestAccquire() {
 				mockNow.Add(3 * time.Second),
 				mockNow.Add(4 * time.Second),
 				mockNow.Add(5 * time.Second),
-				mockNow.Add(10 * time.Second),
-				mockNow.Add(11 * time.Second),
+				mockNow.Add(13 * time.Second),
+				mockNow.Add(14 * time.Second),
 			},
 			Exp:      []bool{true, true, true, true, true, false, true, true},
-			ExpCount: []int{1, 2, 3, 4, 5, 6, 1, 2},
+			ExpCount: []int{1, 2, 3, 4, 5, 5, 3, 3},
 		},
 	}
 
@@ -126,20 +126,22 @@ func (s *fixedWindowSuite) TestAccquire() {
 	for _, test := range tests {
 		s.SetupTest()
 
-		s.Len(test.Exp, len(test.AccquireTime), test.Desc)
-		s.Len(test.ExpCount, len(test.AccquireTime), test.Desc)
+		s.Len(test.Exp, len(test.AccquireTime))
+		s.Len(test.ExpCount, len(test.AccquireTime))
 
 		var act bool
 		var actCount int
 		var err error
 		for i, t := range test.AccquireTime {
 			s.mockFuncs.On("timeNow").Return(t).Once()
-			act, actCount, err = s.fixedWindow.Acquire(mockCTX, key)
+			act, actCount, err = s.slidingWindow.Acquire(mockCTX, key)
 			s.NoError(err, test.Desc)
 			s.Equal(test.Exp[i], act, test.Desc)
+
 			s.Equal(test.ExpCount[i], actCount, test.Desc)
 		}
 
 		s.TearDownTest()
 	}
+
 }

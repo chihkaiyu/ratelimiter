@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/siruspen/logrus"
+	"github.com/sirupsen/logrus"
 
 	"github.com/chihkaiyu/dcard-homework/api"
 	"github.com/chihkaiyu/dcard-homework/service/ratelimiter"

@@ -3,7 +3,7 @@ package ctx
 import (
 	"context"
 
-	"github.com/siruspen/logrus"
+	"github.com/sirupsen/logrus"
 )
 
 // CTX extends Golang's context to support logging methods
