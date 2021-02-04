@@ -14,9 +14,7 @@ import (
 
 var (
 	timeNow = time.Now
-)
 
-var (
 	fixedWindowSize  = flag.Int("fixed_window_size", 60, "fixed window size (in second)")
 	fixedWindowLimit = flag.Int("fixed_window_limit", 60, "fixed window limit")
 )

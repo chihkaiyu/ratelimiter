@@ -6,7 +6,7 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    command: ["-port=9000", "-redis_addr=redis:6379", "-ratelimiter_strategy=fixedwindow", "-fixed_window_size=60", "-fixed_window_limit=60"]
+    command: ["-port=9000", "-redis_addr=redis:6379", "-ratelimiter_strategy=tokenbucket", "-bucketsize=3", "-refill_per_second=0.1"]
     depends_on: 
       - redis
     ports: 

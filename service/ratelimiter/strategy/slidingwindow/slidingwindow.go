@@ -15,11 +15,9 @@ import (
 
 var (
 	timeNow = time.Now
-)
 
-var (
-	slidingWindowSize  = flag.Int("sliding_window_size", 60, "fixed window size (in second)")
-	slidingWindowLimit = flag.Int("sliding_window_limit", 60, "fixed window limit")
+	slidingWindowSize  = flag.Int("sliding_window_size", 60, "sliding window size (in second)")
+	slidingWindowLimit = flag.Int("sliding_window_limit", 60, "sliding window limit")
 )
 
 type impl struct {

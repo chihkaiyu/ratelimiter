@@ -6,6 +6,7 @@ import (
 	"github.com/chihkaiyu/dcard-homework/base/ctx"
 	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy"
 	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy/fixedwindow"
+	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy/slidingwindow"
 	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy/tokenbucket"
 	"github.com/chihkaiyu/dcard-homework/service/redis"
 )
@@ -25,6 +26,8 @@ func NewRateLimiter(
 	switch *rateLimiterStrategy {
 	case "tokenbucket":
 		stra = tokenbucket.NewTokenBucket(redis)
+	case "slidingwindow":
+		stra = slidingwindow.NewSlidingWindow(redis)
 	case "fixedwindow":
 		stra = fixedwindow.NewFixedWindow(redis)
 	default:
