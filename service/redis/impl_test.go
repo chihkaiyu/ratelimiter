@@ -116,3 +116,20 @@ return curVal`
 
 	s.Equal(mockNow.Add(60*time.Second).Unix(), value.(int64))
 }
+
+func (s *redisSuite) TestIncr() {
+	_, err := s.redis.client.Set(mockCTX, "tmp", []byte("10"), 30*time.Minute).Result()
+	s.NoError(err)
+	value, err := s.redis.Incr(mockCTX, "tmp")
+	s.NoError(err)
+	s.Equal(int64(11), value)
+
+	value, err = s.redis.Incr(mockCTX, "not-exist")
+	s.NoError(err)
+	s.Equal(int64(1), value)
+}
+
+func (s *redisSuite) TestExpire() {
+	err := s.redis.Expire(mockCTX, "tmp", 1*time.Second)
+	s.NoError(err)
+}

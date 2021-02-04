@@ -13,11 +13,17 @@ type impl struct {
 }
 
 func NewRedis(addr, password string) Service {
+	client := redis.NewClient(&redis.Options{
+		Addr:     addr,
+		Password: password,
+	})
+
+	_, err := client.Ping(ctx.Background()).Result()
+	if err != nil {
+		panic(err)
+	}
 	return &impl{
-		client: redis.NewClient(&redis.Options{
-			Addr:     addr,
-			Password: password,
-		}),
+		client: client,
 	}
 }
 
@@ -53,6 +59,26 @@ func (im *impl) Get(context ctx.CTX, key string) ([]byte, error) {
 func (im *impl) Set(context ctx.CTX, key string, value []byte, ttl time.Duration) error {
 	if err := im.client.Set(context, key, value, ttl).Err(); err != nil {
 		context.WithField("err", err).Error("client.Set failed")
+		return err
+	}
+
+	return nil
+}
+
+func (im *impl) Incr(context ctx.CTX, key string) (int64, error) {
+	value, err := im.client.Incr(context, key).Result()
+	if err != nil {
+		context.WithField("err", err).Error("client.Incr failed")
+		return 0, err
+	}
+
+	return value, nil
+}
+
+func (im *impl) Expire(context ctx.CTX, key string, ttl time.Duration) error {
+	_, err := im.client.Expire(context, key, ttl).Result()
+	if err != nil {
+		context.WithField("err", err).Error("client.Expire failed")
 		return err
 	}
 
