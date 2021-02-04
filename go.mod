@@ -1,4 +1,4 @@
-module github.com/chihkaiyu/dcard-homework
+module github.com/chihkaiyu/ratelimiter
 
 go 1.13
 

@@ -7,9 +7,9 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/suite"
 
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
-	"github.com/chihkaiyu/dcard-homework/base/docker"
-	"github.com/chihkaiyu/dcard-homework/service/redis"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/base/docker"
+	"github.com/chihkaiyu/ratelimiter/service/redis"
 )
 
 var (

@@ -8,7 +8,7 @@ import (
 	"github.com/ory/dockertest/v3"
 	"github.com/sirupsen/logrus"
 
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
 )
 
 type repoInfo struct {

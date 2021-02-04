@@ -1,5 +1,5 @@
 {
     "gopls": {
-        "local": "github.com/chihkaiyu/dcard-homework"
+        "local": "github.com/chihkaiyu/ratelimiter"
     },
 }

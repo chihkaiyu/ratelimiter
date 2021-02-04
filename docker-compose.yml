@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   api:
-    image: dcard-homework
+    image: ratelimiter
     build: 
       context: .
       dockerfile: Dockerfile

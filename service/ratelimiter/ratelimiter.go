@@ -1,7 +1,7 @@
 package ratelimiter
 
 import (
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
 )
 
 type Service interface {

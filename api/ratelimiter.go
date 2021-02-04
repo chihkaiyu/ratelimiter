@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter"
 )
 
 type RateLimiter struct {

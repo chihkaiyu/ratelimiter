@@ -7,9 +7,9 @@ import (
 
 	goredis "github.com/go-redis/redis/v8"
 
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy"
-	"github.com/chihkaiyu/dcard-homework/service/redis"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter/strategy"
+	"github.com/chihkaiyu/ratelimiter/service/redis"
 )
 
 // local remain = math.min(newSize, tonumber(ARGV[4]))

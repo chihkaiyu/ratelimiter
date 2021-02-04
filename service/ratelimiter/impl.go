@@ -3,12 +3,12 @@ package ratelimiter
 import (
 	"flag"
 
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy/fixedwindow"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy/slidingwindow"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter/strategy/tokenbucket"
-	"github.com/chihkaiyu/dcard-homework/service/redis"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter/strategy"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter/strategy/fixedwindow"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter/strategy/slidingwindow"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter/strategy/tokenbucket"
+	"github.com/chihkaiyu/ratelimiter/service/redis"
 )
 
 var (

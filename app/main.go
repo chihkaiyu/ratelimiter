@@ -8,9 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"github.com/chihkaiyu/dcard-homework/api"
-	"github.com/chihkaiyu/dcard-homework/service/ratelimiter"
-	"github.com/chihkaiyu/dcard-homework/service/redis"
+	"github.com/chihkaiyu/ratelimiter/api"
+	"github.com/chihkaiyu/ratelimiter/service/ratelimiter"
+	"github.com/chihkaiyu/ratelimiter/service/redis"
 )
 
 var (

@@ -9,7 +9,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 
-	"github.com/chihkaiyu/dcard-homework/base/ctx"
+	"github.com/chihkaiyu/ratelimiter/base/ctx"
 )
 
 var (
