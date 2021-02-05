@@ -48,6 +48,7 @@ func (im *impl) Acquire(context ctx.CTX, key string) (bool, int, error) {
 		return false, 0, err
 	}
 	defer func() {
+		// we don't need the window after changing to another window
 		if err := im.redis.Expire(context, redisKey, time.Duration(im.size)*time.Second); err != nil {
 			context.WithFields(logrus.Fields{
 				"err": err,

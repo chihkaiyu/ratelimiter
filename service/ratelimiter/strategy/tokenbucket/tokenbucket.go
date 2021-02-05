@@ -12,11 +12,10 @@ import (
 	"github.com/chihkaiyu/ratelimiter/service/redis"
 )
 
-// local remain = math.min(newSize, tonumber(ARGV[4]))
-// newSize = math.max(remain - 1, 0)
-
 const (
 	// ARGV: nowTimestamp, nowNanoSecond, refillPerSecond, bucketSize
+	// if we return newSize, we wouldn't know there are remaining tokens or not
+	// since the newSize is 0 when there is no tokens or 1 left token
 	script = `
 local newSize = tonumber(ARGV[4])
 local oldData = redis.call('HMGET', KEYS[1], 'ts', 'tsNano', 'tokens')
@@ -86,5 +85,6 @@ func (im *impl) Acquire(context ctx.CTX, key string) (bool, int, error) {
 		return false, *bucketSize, nil
 	}
 
+	// we use the number of tokens taken from the bucket as the number of requests
 	return true, *bucketSize - int(remain.(int64)) + 1, nil
 }

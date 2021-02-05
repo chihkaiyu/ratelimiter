@@ -52,13 +52,17 @@ func (im *impl) Acquire(context ctx.CTX, key string) (bool, int, error) {
 		return false, 0, err
 	}
 	defer func() {
-		if err := im.redis.Expire(context, redisKey, time.Duration(120)*time.Second); err != nil {
+		// we don't need the window if request doesn't appear in size seconds
+		// since every time we count the number of request between now-size and now
+		// there won't be any records if no request appears
+		if err := im.redis.Expire(context, redisKey, time.Duration(im.size)*time.Second); err != nil {
 			context.WithFields(logrus.Fields{
 				"err": err,
 				"key": redisKey,
 			}).Error("redis.Expire failed")
 		}
 
+		// clear the records in outdated windows for reducing the data
 		if err := im.redis.ZRemRangeByScore(context, redisKey, "-inf", min); err != nil {
 			context.WithFields(logrus.Fields{
 				"err": err,

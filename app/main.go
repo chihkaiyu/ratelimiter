@@ -28,7 +28,6 @@ func main() {
 	router := gin.Default()
 	router.Use(api.Cors())
 	rg := router.Group("/api/v1")
-	// TODO: add rate limiter here
 	rg.Use(
 		api.AddContext(), api.SetClientIP(), ratelimiter.Acquire(),
 	)
