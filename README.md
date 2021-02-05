@@ -116,6 +116,7 @@ There are some flags you could set for different purpose:
 | refill_per_second | 1 | how many tokens to be refilled in one second |
 
 # Strategy Analysis
+I've implemented 3 strategies for rate limiting: fixed window, sliding window and token bucket.  
 Annotation
 - N: the number of different IP
 - L: the limit of request (only in fixed window and sliding window)
